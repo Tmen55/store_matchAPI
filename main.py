@@ -1,23 +1,15 @@
-from flask import Flask, jsonify
-import requests
-from bs4 import BeautifulSoup
+from flask import Flask
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
-@app.route("/flipp")
-def scrape_flipp():
-    try:
-        url = "https://flipp.com/en-us"  # Example target
-        headers = {"User-Agent": "Mozilla/5.0"}
-        response = requests.get(url, headers=headers)
-        soup = BeautifulSoup(response.text, "html.parser")
+@app.route('/')
+def home():
+    return 'Smart Coupon Backend is running!'
 
-        # Simulated scrape logic (replace with real selectors)
-        coupons = [
-            {"brand": "Tide", "offer": "$3 Off", "expires": "2025-06-10"},
-            {"brand": "Colgate", "offer": "$1.50 Off", "expires": "2025-06-08"},
-        ]
-        return jsonify(coupons)
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+# Add this block to bind the port Render expects:
+import os
+if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 10000))  # Render injects PORT env var
+    app.run(host='0.0.0.0', port=port)
